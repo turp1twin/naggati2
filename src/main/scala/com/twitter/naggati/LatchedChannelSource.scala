@@ -16,7 +16,6 @@
 
 package com.twitter.naggati
 
-import java.util.concurrent.CountDownLatch
 import scala.collection.mutable
 import com.twitter.concurrent.{ChannelSource, Observer}
 import com.twitter.util.Future
