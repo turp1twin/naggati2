@@ -17,7 +17,6 @@
 package com.twitter.naggati
 
 import scala.annotation.tailrec
-import scala.collection.mutable
 import org.jboss.netty.buffer.{ChannelBuffer, ChannelBuffers}
 import org.jboss.netty.channel._
 import org.jboss.netty.handler.codec.frame.FrameDecoder

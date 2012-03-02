@@ -17,26 +17,26 @@
 package com.twitter.naggati
 package codec
 
-import org.jboss.netty.buffer.{ChannelBuffers, ChannelBuffer}
+import java.nio.ByteBuffer
+import org.jboss.netty.buffer.{ChannelBuffer, ChannelBuffers}
 
-
-case class MemcacheRequest(line: List[String], data: Option[Array[Byte]], bytesRead: Int) {
+case class MemcacheRequest(line: List[String], data: Option[ByteBuffer], bytesRead: Int) {
   override def toString = {
     "<Request: " + line.mkString("[", " ", "]") + (data match {
       case None => ""
-      case Some(x) => " data=" + x.size
+      case Some(x) => " data=" + x.remaining
     }) + " read=" + bytesRead + ">"
   }
 }
 
 case class MemcacheResponse(
   line: String,
-  data: Option[Array[Byte]] = None
+  data: Option[ByteBuffer] = None
 ) extends Codec.Signalling {
   override def toString = {
     "<Response: " + line + (data match {
       case None => ""
-      case Some(x) => " data=" + x.size
+      case Some(x) => " data=" + x.remaining
     }) + ">"
   }
 
@@ -44,7 +44,7 @@ case class MemcacheResponse(
 
   def writeAscii(): Option[ChannelBuffer] = {
     if (lineData.size > 0) {
-      val dataSize = if (data.isDefined) (data.get.size + MemcacheCodec.END.size) else 0
+      val dataSize = if (data.isDefined) (data.get.remaining + MemcacheCodec.END.size) else 0
       val size = lineData.size + MemcacheCodec.CRLF.size + dataSize
       val buffer = ChannelBuffers.buffer(size)
       buffer.writeBytes(lineData)
@@ -84,8 +84,9 @@ object MemcacheCodec {
       val dataBytes = segments(4).toInt
       ensureBytes(dataBytes + 2) { buffer =>
         // final 2 bytes are just "\r\n" mandated by protocol.
-        val bytes = new Array[Byte](dataBytes)
+        val bytes = ByteBuffer.allocate(dataBytes)
         buffer.readBytes(bytes)
+        bytes.flip()
         buffer.skipBytes(2)
         emit(MemcacheRequest(segments.toList, Some(bytes), line.length + dataBytes + 4))
       }

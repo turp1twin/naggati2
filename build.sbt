@@ -7,9 +7,14 @@ version := "2.3.0-SNAPSHOT"
 // Our Scala version...
 scalaVersion := "2.9.1"
 
+// Axway internal Maven repo
+publishTo := Some("ci-synchrony.phx.axway.int-snapshots" at "http://ci-synchrony.phx.axway.int/artifactory/manual-phx-snapshots")
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+
 // App dependencies
 libraryDependencies ++= Seq(
-    "org.jboss.netty" % "netty" % "3.2.7.Final",
+    "io.netty" % "netty" % "3.3.1.Final" withSources(),
     "com.twitter" %% "util-core" % "1.12.12"
 )
 
@@ -29,6 +34,5 @@ resolvers ++= Seq(
   "twitter repo" at "http://maven.twttr.com/",
   "freemarker" at "http://freemarker.sourceforge.net/maven2/"
 )
-
 
 
