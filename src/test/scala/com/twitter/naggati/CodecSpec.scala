@@ -16,9 +16,7 @@
 
 package com.twitter.naggati
 
-import com.twitter.concurrent
-import org.jboss.netty.buffer.{ChannelBuffer, ChannelBuffers}
-import org.jboss.netty.channel.Channel
+import org.jboss.netty.buffer.ChannelBuffers
 import org.specs.Specification
 import org.specs.mock.JMocker
 import Stages._

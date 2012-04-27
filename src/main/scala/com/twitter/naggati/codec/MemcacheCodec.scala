@@ -30,9 +30,9 @@ case class MemcacheRequest(line: List[String], data: Option[ByteBuffer], bytesRe
 }
 
 case class MemcacheResponse(
-  line: String,
-  data: Option[ByteBuffer] = None
-) extends Codec.Signalling {
+                             line: String,
+                             data: Option[ByteBuffer] = None
+                             ) extends Codec.Signalling {
   override def toString = {
     "<Response: " + line + (data match {
       case None => ""
@@ -83,7 +83,7 @@ object MemcacheCodec {
       }
       val dataBytes = segments(4).toInt
       ensureBytes(dataBytes + 2) { buffer =>
-        // final 2 bytes are just "\r\n" mandated by protocol.
+      // final 2 bytes are just "\r\n" mandated by protocol.
         val bytes = ByteBuffer.allocate(dataBytes)
         buffer.readBytes(bytes)
         bytes.flip()
